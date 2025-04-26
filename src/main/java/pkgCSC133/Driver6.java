@@ -2,7 +2,7 @@ package pkgCSC133;
 import pkgWMRenderEngine.WMRenderer;
 import pkgWMUtils.WMWindowManager;
 
-public class Driver {
+public class Driver6 {
     public static void main(String[] args) {
         final int numRows = 6, numCols = 7, polyLength = 50, polyOffset = 10, polyPadding = 20;
         final int winWidth = (polyLength + polyPadding) * numCols + 2 * polyOffset;

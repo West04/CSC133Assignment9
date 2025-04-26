@@ -1,6 +1,7 @@
-package pkgWMUtils;
+package pkgWMRenderEngine;
 
-import java.awt.*;
+import pkgWMUtils.WMGoLArray;
+import pkgWMUtils.WMPingPongArray;
 
 public class WMGeometryManager {
     private final int NUM_COLS;
@@ -10,7 +11,7 @@ public class WMGeometryManager {
     private final int[] WinWidthHeight;
     private final int OFFSET;
     private final int PADDING;
-    private final WMPingPongArray myPPArray;
+    private WMPingPongArray myPPArray;
 
     protected WMGeometryManager(int maxRows, int maxCols, int offset, int size, int padding, int[] winWidthHeight) {
         NUM_COLS = maxCols;
@@ -20,9 +21,6 @@ public class WMGeometryManager {
         PADDING = padding;
         TOTAL = NUM_COLS * NUM_ROWS;
         WinWidthHeight = winWidthHeight;
-        myPPArray = new WMPingPongArray(NUM_ROWS, NUM_COLS, 0, 1);
-        myPPArray.randomizeInRange();
-
     }
 
     protected float[] generateTilesVertices(final int rowTiles, final int columnTiles) {
@@ -33,11 +31,14 @@ public class WMGeometryManager {
         return false;
     }
 
-    protected int[] generateTileIndices(final int totalTiles) {
-        return new int[1];
-    }
-
     protected boolean generateTilesVertices(final WMGoLArray myGoLA, float[] vertices) {
+        myPPArray = myGoLA;
+
+        int rows = myGoLA.getNumRows();
+        int cols = myGoLA.getNumCols();
+
+        float[] calculatedVertices = generateTilesVertices(rows, cols);
+
         return false;
     }
 }

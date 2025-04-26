@@ -56,6 +56,18 @@ public class WMPingPongArray {
         swapLiveAndNext();
     } // public WMPingPongArray(String dataFileName)
 
+    public int getNumRows() {
+        return numRows;
+    }
+
+    public int getNumCols() {
+        return numCols;
+    }
+
+    public int getTotalLength() {
+        return totalLength;
+    }
+
     public void printArray() {
         for (int row = 0; row < numRows; row++) {
             System.out.print(row + "  ");

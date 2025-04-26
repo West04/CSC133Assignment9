@@ -1,7 +1,6 @@
 package pkgCSC133;
 
 import pkgWMRenderEngine.WMRenderer;
-import pkgWMUtils.WMGeometryManager;
 import pkgWMUtils.WMGoLArray;
 import pkgWMUtils.WMWindowManager;
 

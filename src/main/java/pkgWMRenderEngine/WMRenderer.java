@@ -16,20 +16,20 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 
 public class WMRenderer {
+    private WMWindowManager myWM;
     private int shader_program;
     private int NUM_COLS;
-    private Matrix4f viewProjMatrix;
-    private final int VPT = 4;  // Vertices Per Tile
-    private int[] winWidthHeight;
-    private static final int OGL_MATRIX_SIZE = 16;
-    private FloatBuffer myFloatBuffer;
     private int NUM_ROWS;
     private int PADDING;
-    private final int EPT = 6;  // Element Per Tile
-    private int SIZE;
-    private WMWindowManager myWM;
     private int OFFSET;
+    private int SIZE;
+    private int[] winWidthHeight;
+    private final int EPT = 6;  // Element Per Tile
     private final int FPV = 2;  // Float Per Vertex
+    private final int VPT = 4;  // Vertices Per Tile
+    private static final int OGL_MATRIX_SIZE = 16;
+    private Matrix4f viewProjMatrix;
+    private FloatBuffer myFloatBuffer;
     private int vpMatLocation;
     private int renderColorLocation;
 

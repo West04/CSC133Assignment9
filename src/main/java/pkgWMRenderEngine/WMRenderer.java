@@ -124,12 +124,12 @@ public class WMRenderer {
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
             glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.
                     createFloatBuffer(vertices.length).
-                    put(vertices).flip(), GL_STATIC_DRAW);
+                    put(vertices).flip(), GL_DYNAMIC_DRAW);
             glEnableClientState(GL_VERTEX_ARRAY);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) BufferUtils.
                     createIntBuffer(indices.length).
-                    put(indices).flip(), GL_STATIC_DRAW);
+                    put(indices).flip(), GL_DYNAMIC_DRAW);
             glVertexPointer(2, GL_FLOAT, 0, 0L);
             //viewProjMatrix.setOrtho(-100, 100, -100, 100, 0, 10);
             viewProjMatrix.setOrtho(0.0f, winWidthHeight[0], 0.0f, winWidthHeight[1], 0.0f, 10.0f);

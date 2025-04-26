@@ -44,17 +44,32 @@ public class WMWindowManager {
         }
         win_width = width;
         win_height = height;
-        my_window = new WMWindowManager();
-        return my_window;
+
+        int defaultOrgX = 50;
+        int defaultOrgY = 80;
+        return init(width, height, defaultOrgX, defaultOrgY);
     } // public static WMWindowManager get(int width, int height)
 
     public static WMWindowManager get() {
         if (my_window != null) {
             return my_window;
         }
-        my_window = new WMWindowManager();
-        return my_window;
+        int defaultWidth = 100;
+        int defaultHeight = 100;
+
+        int defaultOrgX = 50;
+        int defaultOrgY = 80;
+        return init(defaultWidth, defaultHeight, defaultOrgX, defaultOrgY);
     } //  public static WMWindowManager get()
+
+    private static WMWindowManager init(int width, int height, int orgX, int orgY) {
+        win_width = width;
+        win_height = height;
+        my_window = new WMWindowManager();
+        setWindowPosition(orgX, orgY);
+
+        return my_window;
+    }
 
     protected static void setWinWidth(int winWidth, int winHeight) {
         win_width = winWidth;
@@ -129,8 +144,6 @@ public class WMWindowManager {
     }  //  public void setWindowPosition(...)
 
     public static WMWindowManager get(int width, int height, int orgX, int orgY) {
-        get(width, height);
-        setWindowPosition(orgX, orgY);
-        return my_window;
+        return (WMWindowManager) init(width, height, orgX, orgY);
     }  //  public WMWindowManager get(...)
 }

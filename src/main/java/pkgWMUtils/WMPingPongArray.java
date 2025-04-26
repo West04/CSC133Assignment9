@@ -32,6 +32,30 @@ public class WMPingPongArray {
         } // for (int row = 0; row < numRows; row++)
     } // public WMPingPongArray(int numRows, int numCols, int randMin, int randMax)
 
+    public WMPingPongArray(String dataFileName) {
+        int[][] readArray = readFile(dataFileName);
+
+        if (readArray == null) {
+            System.out.println("File not read correct");
+            System.exit(0);
+        }
+
+        this.numRows = readArray.length;
+        this.numCols = readArray[0].length;
+        this.totalLength = numRows * numCols;
+
+        this.liveArray = new int[numRows][numCols];
+        this.nextArray = new int[numRows][numCols];
+
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                nextArray[row][col] = readArray[row][col];
+            }
+        }
+
+        swapLiveAndNext();
+    } // public WMPingPongArray(String dataFileName)
+
     public void printArray() {
         for (int row = 0; row < numRows; row++) {
             System.out.print(row + "  ");

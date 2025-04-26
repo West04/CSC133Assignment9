@@ -10,11 +10,9 @@ public class WMGoLArray extends WMPingPongArray{
         super(numRows, numCols, 0, 1);
     }
 
-    /*
     public WMGoLArray(final String myDataFile) {
-
+        super(myDataFile);
     }
-    */
 
     public void onTickUpdate() {
 

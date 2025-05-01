@@ -17,6 +17,7 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 
 public class WMRenderer {
     private WMWindowManager myWM;
+    private WMGeometryManager myGM;
     private int shader_program;
     private int NUM_COLS;
     private int NUM_ROWS;
@@ -39,50 +40,6 @@ public class WMRenderer {
         this.myFloatBuffer = BufferUtils.createFloatBuffer(OGL_MATRIX_SIZE);
         this.viewProjMatrix = new Matrix4f();
         this.renderColorLocation = 0;
-    }
-
-    private float[] generateTilesVertices(final int rowTiles, final int columnTiles) {
-        float[] vertices = new float[VPT * FPV * NUM_ROWS * NUM_COLS];
-        float x_min = OFFSET;
-        float y_min = winWidthHeight[1] - (SIZE + OFFSET);
-        int index = 0;
-
-        for (int row = 0; row < rowTiles; row++) {
-            for (int col = 0; col < columnTiles; col++) {
-                vertices[index++] = x_min;
-                vertices[index++] = y_min;
-                vertices[index++] = x_min + SIZE;
-                vertices[index++] = y_min;
-                vertices[index++] = x_min + SIZE;
-                vertices[index++] = y_min + SIZE;
-                vertices[index++] = x_min;
-                vertices[index++] = y_min + SIZE;
-                x_min += SIZE + PADDING;
-            }
-            x_min = OFFSET;
-            y_min -= (SIZE + PADDING);
-        }
-
-        return vertices;
-        // return new float[] {-20f, -20f, 20f, -20f, 20f, 20f, -20f, 20f};
-    }
-
-    private int[] generateTileIndices(final int rows, final int cols) {
-        int total_tiles = rows * cols;
-        int total_elements = total_tiles * EPT;
-        int[] indices = new int[total_elements];
-        int cur_tile = 0;
-
-        for (int tile = 0; tile < total_tiles; tile++) {
-            indices[cur_tile++] = tile * VPT;
-            indices[cur_tile++] = tile * VPT + 1;
-            indices[cur_tile++] = tile * VPT + 2;
-            indices[cur_tile++] = tile * VPT;
-            indices[cur_tile++] = tile * VPT + 2;
-            indices[cur_tile++] = tile * VPT + 3;
-        }
-        return indices;
-        // return new int[]{0, 1, 2, 0, 2, 3};
     }
 
     private void initOpenGL() {
@@ -119,8 +76,8 @@ public class WMRenderer {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             int vbo = glGenBuffers();
             int ibo = glGenBuffers();
-            float[] vertices = generateTilesVertices(NUM_ROWS, NUM_COLS);
-            int[] indices = generateTileIndices(NUM_ROWS, NUM_COLS);
+            float[] vertices = myGM.generateTilesVertices(NUM_ROWS, NUM_COLS);
+            int[] indices = myGM.generateTileIndices(NUM_ROWS * NUM_COLS);
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
             glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.
                     createFloatBuffer(vertices.length).
@@ -131,7 +88,6 @@ public class WMRenderer {
                     createIntBuffer(indices.length).
                     put(indices).flip(), GL_DYNAMIC_DRAW);
             glVertexPointer(2, GL_FLOAT, 0, 0L);
-            //viewProjMatrix.setOrtho(-100, 100, -100, 100, 0, 10);
             viewProjMatrix.setOrtho(0.0f, winWidthHeight[0], 0.0f, winWidthHeight[1], 0.0f, 10.0f);
             glUniformMatrix4fv(vpMatLocation, false,
                     viewProjMatrix.get(myFloatBuffer));
@@ -143,12 +99,14 @@ public class WMRenderer {
         }
     }
 
-    public void render(final int polyOffset, final int polyPadding, final int polyLength, final int numRows, final int numCols) {
-        this.OFFSET = polyOffset;
+    public void render(final int offset, final int padding, final int size, final int numRows, final int numCols) {
+        this.OFFSET = offset;
         this.NUM_ROWS = numRows;
         this.NUM_COLS = numCols;
-        this.PADDING = polyPadding;
-        this.SIZE = polyLength;
+        this.PADDING = padding;
+        this.SIZE = size;
+
+        myGM = new WMGeometryManager(NUM_ROWS, NUM_COLS, OFFSET, SIZE, PADDING, winWidthHeight);
 
         myWM.updateContextToThis();
         renderLoop();

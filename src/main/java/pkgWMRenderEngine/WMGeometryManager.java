@@ -23,6 +23,10 @@ public class WMGeometryManager {
         WinWidthHeight = winWidthHeight;
     }
 
+    protected int[] generateTileIndices(final int totalTiles) {
+        return new int[1];
+    }
+
     protected float[] generateTilesVertices(final int rowTiles, final int columnTiles) {
         return new float[1];
     }

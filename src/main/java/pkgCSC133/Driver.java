@@ -14,6 +14,13 @@ public class Driver {
 
         final WMRenderer myRenderer = new WMRenderer(myWM);
         myRenderer.render(polyOffset, polyPadding, polyLength, numRows, numCols);
+
+        while (true) {
+            myGoL.onTickUpdate();
+
+            myRenderer.render(polyOffset, polyPadding, polyLength, numRows, numCols);
+
+        }
     }
 
     public static void proj6() {

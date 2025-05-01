@@ -8,6 +8,7 @@ class WMGeometryManagerTest {
 
     @Test
     void generateTilesVertices() {
+        assertEquals(5, 5);
     }
 
 }

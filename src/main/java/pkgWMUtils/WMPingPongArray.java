@@ -257,7 +257,7 @@ public class WMPingPongArray {
         nextArray[row][col] = newValue;
     }
 
-    private record RCPair (int row, int col) { } // private record RCPair(...)
+    record RCPair (int row, int col) { } // private record RCPair(...)
 
     public RCPair[] getNearestNeighborsArray(int orgRow, int orgCol) {
         int numOfNN = 8;

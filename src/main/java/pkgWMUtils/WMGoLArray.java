@@ -5,7 +5,7 @@ import static pkgWMUtils.WMSPOT.*;
 public class WMGoLArray extends WMPingPongArray{
 
     public WMGoLArray(final int rows, final int cols) {
-        super(rows, cols, 0, 2);
+        super(rows, cols, 0, 1);
     }
 
     public WMGoLArray(int numRows, int numCols, int numLiveColumns) {

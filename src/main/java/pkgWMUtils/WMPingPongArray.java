@@ -6,9 +6,9 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class WMPingPongArray {
-    protected final int numRows;
-    protected final int numCols;
-    protected final int totalLength;
+    private final int numRows;
+    private final int numCols;
+    private final int totalLength;
 
     private int[][] liveArray;
     private int[][] nextArray;
@@ -259,7 +259,7 @@ public class WMPingPongArray {
 
     private record RCPair (int row, int col) { } // private record RCPair(...)
 
-    private RCPair[] getNearestNeighborsArray(int orgRow, int orgCol) {
+    public RCPair[] getNearestNeighborsArray(int orgRow, int orgCol) {
         int numOfNN = 8;
         RCPair[] nearestNeighbors = new RCPair[numOfNN];
 
@@ -284,8 +284,10 @@ public class WMPingPongArray {
 
     } // private RCPair[] getNearestNeighborsArray(int orgRow, int orgCol)
 
-    private int getNNSum(RCPair[] nearestNeighbor, int[][] tempArray) {
+    public int getNNSum(int orgRow, int orgCol) {
         int sum = 0;
+
+        RCPair[] nearestNeighbor = getNearestNeighborsArray(orgRow, orgCol);
 
         for (int index = 0; index < nearestNeighbor.length; index++) {
 
@@ -293,22 +295,20 @@ public class WMPingPongArray {
             int col = pair.col;
             int row = pair.row;
 
-            sum += tempArray[row][col];
+            sum += liveArray[row][col];
         } // for (int index = 0; index < nearestNeighbor.length; index++)
 
         return sum;
     } // private int getNNSum(RCPair[] nearestNeighbor, int[][] tempArray)
 
     public void updateToNearestNNSum() {
-        int[][] tempArray = getArray();
-
         for (int row = 0; row < numRows; row++) {
 
             for (int col = 0; col < numCols; col++) {
-                RCPair[] pairs = getNearestNeighborsArray(row, col);
-                int sum = getNNSum(pairs, tempArray);
 
+                int sum = getNNSum(row, col);
                 nextArray[row][col] = sum;
+
             } // for (int col = 0; col < numCols; col++)
 
         } // for (int row = 0; row < numRows; row++)

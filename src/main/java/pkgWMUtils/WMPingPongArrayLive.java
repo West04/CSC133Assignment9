@@ -15,8 +15,8 @@ public class WMPingPongArrayLive extends WMPingPongArray {
     private void addLiveCellsToNext(int numLiveCells) {
 
         for (int index = 0; index < numLiveCells; index++) {
-            int row = index / super.numRows;
-            int col = index % super.numCols;
+            int row = index / getNumRows();
+            int col = index % getNumCols();
 
             super.setCell(row, col, ALIVE);
         } // for (int index = 0; index < numLiveCells; index++)
@@ -26,14 +26,14 @@ public class WMPingPongArrayLive extends WMPingPongArray {
         int[][] tempArray = super.getArray();
         int count = 0;
 
-        int nextRow = (row + 1) % numRows; // 1
-        int nextCol = (col + 1) % numCols; // 1
-        int prevRow = (numRows + row - 1) % numRows; // 6
-        int prevCol = (numCols + col - 1) % numCols; // 6
-        int next2Row = (row + 2) % numRows;  // 2
-        int next2Col = (col + 2) % numCols; // 2
-        int prev2Row = (numRows + row - 2) % numRows;  // 5
-        int prev2Col = (numCols + col - 2) % numCols; // 5
+        int nextRow = (row + 1) % getNumRows(); // 1
+        int nextCol = (col + 1) % getNumCols(); // 1
+        int prevRow = (getNumRows() + row - 1) % getNumRows(); // 6
+        int prevCol = (getNumCols() + col - 1) % getNumCols(); // 6
+        int next2Row = (row + 2) % getNumRows();  // 2
+        int next2Col = (col + 2) % getNumCols(); // 2
+        int prev2Row = (getNumRows() + row - 2) % getNumRows();  // 5
+        int prev2Col = (getNumCols() + col - 2) % getNumCols(); // 5
 
         count += tempArray[prev2Row][next2Col]; // 5,2
         count += tempArray[prev2Row][nextCol]; // 5,1

@@ -14,6 +14,21 @@ public class WMGoLArrayTest {
     private final int TEST_ROWS = 4;
     private final int TEST_COLS = 4;
 
+    // Helper Method for Visualizing Arrays not in GolArray
+    public void printNormalArray(int[][] array) {
+        System.out.println();
+        for (int row = 0; row < array.length; row++) {
+            System.out.print(row + "  ");
+
+            for (int col = 0; col < array[0].length; col++) {
+                System.out.print(array[row][col] + " ");
+            } // for (int col = 0; col < numCols; col++)
+
+            System.out.println();
+        } // for (int row = 0; row < numRows; row++)
+        System.out.println();
+    }
+
     @BeforeEach
     public void setUp() {
         golArray = new WMGoLArray(TEST_ROWS, TEST_COLS);
@@ -21,6 +36,7 @@ public class WMGoLArrayTest {
 
     @Test
     public void testConstructor1() {
+        System.out.println("Testing constructor 1");
         WMGoLArray newArray = new WMGoLArray("golarray_constructor_test1.txt");
         newArray.printArray();
 
@@ -34,6 +50,7 @@ public class WMGoLArrayTest {
 
     @Test
     public void testConstructor2() {
+        System.out.println("Testing constructor 2");
         golArray.copyToNextArray();
 
         golArray.setAlive(0,0);
@@ -58,6 +75,7 @@ public class WMGoLArrayTest {
 
     @Test
     public void testConstructor3() {
+        System.out.println("Testing constructor 3");
         int numOfLives = 3;
         int numOfRepeat = 5;
 
@@ -79,6 +97,7 @@ public class WMGoLArrayTest {
 
     @Test
     public void testUpdate1() {
+        System.out.println("Testing update 1");
         int[][] originalArray = golArray.getArray();
 
         int numOfUpdates = 5;
@@ -98,6 +117,7 @@ public class WMGoLArrayTest {
 
     @Test
     public void testUpdate2() {
+        System.out.println("Testing update 2");
         golArray.printArray();
         System.out.println();
         int[][] originalArray = golArray.getArray();
@@ -122,17 +142,69 @@ public class WMGoLArrayTest {
         assertArrayEquals(originalArray, updatedArray);
     }
 
-    public void printNormalArray(int[][] array) {
+    @Test
+    public void testUpdate3() {
+        System.out.println("Testing update 3");
+        golArray.printArray();
         System.out.println();
-        for (int row = 0; row < array.length; row++) {
-            System.out.print(row + "  ");
 
-            for (int col = 0; col < array[0].length; col++) {
-                System.out.print(array[row][col] + " ");
-            } // for (int col = 0; col < numCols; col++)
+        golArray.setAlive(0, 0);
+        golArray.setAlive(1, 0);
+        golArray.setAlive(2, 0);
+        golArray.setAlive(3, 0);
 
+        golArray.setAlive(0, 2);
+        golArray.setAlive(1, 2);
+        golArray.setAlive(2, 2);
+        golArray.setAlive(3, 2);
+
+        golArray.swapLiveAndNext();
+        golArray.printArray();
+        System.out.println();
+        int[][] originalArray = golArray.getArray();
+        int numOfUpdates = 5;
+
+        for (int i = 0; i < numOfUpdates; i++) {
+            golArray.onTickUpdate();
+            golArray.swapLiveAndNext();
+            golArray.printArray();
             System.out.println();
-        } // for (int row = 0; row < numRows; row++)
+
+            assertArrayEquals(originalArray, golArray.getArray());
+        }
+    }
+
+    @Test
+    public void testUpdate4() {
+        System.out.println("Testing update 4");
+
+        WMGoLArray newGoLArray = new WMGoLArray("gol_input_1.txt");
+        newGoLArray.printArray();
+
+        boolean equalsFlag = true;
+        int iterations = 0;
+        int maxIterations = 100;
+
+        int[][] afterArray = new int[0][0];
+        int[][] beforeArray = new int[0][0];;
+
+        while (equalsFlag || iterations > maxIterations) {
+            beforeArray = newGoLArray.getArray();
+
+            newGoLArray.onTickUpdate();
+            newGoLArray.swapLiveAndNext();
+
+            afterArray = newGoLArray.getArray();
+
+            equalsFlag = !Arrays.deepEquals(beforeArray, afterArray);
+            iterations++;
+        }
+
         System.out.println();
+        printNormalArray(afterArray);
+        System.out.println();
+        printNormalArray(beforeArray);
+
+        assertArrayEquals(afterArray, beforeArray);
     }
 }

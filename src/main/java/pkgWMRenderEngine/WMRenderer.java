@@ -28,9 +28,6 @@ public class WMRenderer {
     private int OFFSET;
     private int SIZE;
     private int[] winWidthHeight;
-    private final int EPT = 6;  // Element Per Tile
-    private final int FPV = 2;  // Float Per Vertex
-    private final int VPT = 4;  // Vertices Per Tile
     private static final int OGL_MATRIX_SIZE = 16;
     private Matrix4f viewProjMatrix;
     private FloatBuffer myFloatBuffer;
@@ -51,50 +48,6 @@ public class WMRenderer {
         this.myGoL = myGOL;
 
         myGM = new WMGeometryManager(NUM_ROWS, NUM_COLS, OFFSET, SIZE, PADDING, winWidthHeight);
-    }
-
-    private float[] generateTilesVertices(final int rowTiles, final int columnTiles) {
-        float[] vertices = new float[VPT * FPV * NUM_ROWS * NUM_COLS];
-        float x_min = OFFSET;
-        float y_min = winWidthHeight[1] - (SIZE + OFFSET);
-        int index = 0;
-
-        for (int row = 0; row < rowTiles; row++) {
-            for (int col = 0; col < columnTiles; col++) {
-                vertices[index++] = x_min;
-                vertices[index++] = y_min;
-                vertices[index++] = x_min + SIZE;
-                vertices[index++] = y_min;
-                vertices[index++] = x_min + SIZE;
-                vertices[index++] = y_min + SIZE;
-                vertices[index++] = x_min;
-                vertices[index++] = y_min + SIZE;
-                x_min += SIZE + PADDING;
-            }
-            x_min = OFFSET;
-            y_min -= (SIZE + PADDING);
-        }
-
-        return vertices;
-        // return new float[] {-20f, -20f, 20f, -20f, 20f, 20f, -20f, 20f};
-    }
-
-    private int[] generateTileIndices(final int rows, final int cols) {
-        int total_tiles = rows * cols;
-        int total_elements = total_tiles * EPT;
-        int[] indices = new int[total_elements];
-        int cur_tile = 0;
-
-        for (int tile = 0; tile < total_tiles; tile++) {
-            indices[cur_tile++] = tile * VPT;
-            indices[cur_tile++] = tile * VPT + 1;
-            indices[cur_tile++] = tile * VPT + 2;
-            indices[cur_tile++] = tile * VPT;
-            indices[cur_tile++] = tile * VPT + 2;
-            indices[cur_tile++] = tile * VPT + 3;
-        }
-        return indices;
-        // return new int[]{0, 1, 2, 0, 2, 3};
     }
 
     private void initOpenGL() {
@@ -130,8 +83,8 @@ public class WMRenderer {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         int vbo = glGenBuffers();
         int ibo = glGenBuffers();
-        float[] vertices = generateTilesVertices(NUM_ROWS, NUM_COLS);
-        int[] indices = generateTileIndices(NUM_ROWS, NUM_COLS);
+        float[] vertices = myGM.generateTilesVertices(NUM_ROWS, NUM_COLS);
+        int[] indices = myGM.generateTileIndices(NUM_ROWS * NUM_COLS);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.
                 createFloatBuffer(vertices.length).
@@ -155,7 +108,6 @@ public class WMRenderer {
     public void render() {
         glfwPollEvents();
         initOpenGL();
-
         renderLoop();
         myWM.destroyGlfwWindow();
     }

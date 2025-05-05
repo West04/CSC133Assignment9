@@ -65,12 +65,19 @@ public class WMGoLArray extends WMPingPongArray{
         return count;
     }
 
+    public void setCell(int row, int col, int newValue) {
+        if (newValue == DEAD) {
+            setDead(row, col);
+        } else {
+            setAlive(row, col);
+        }
+    }
+
     public void setAlive(int row, int col) {
-        setCell(row, col, ALIVE);
+        super.setCell(row, col, ALIVE);
     }
 
     public void setDead(int row, int col) {
-        setCell(row, col, DEAD);
+        super.setCell(row, col, DEAD);
     }
-
 }

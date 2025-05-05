@@ -2,7 +2,11 @@ package pkgWMUtils;
 
 import static pkgWMUtils.WMSPOT.*;
 
-public class WMGoLArray extends WMPingPongArray{
+public class WMGoLArray extends WMPingPongArray {
+
+    public WMGoLArray(final String myDataFile) {
+        super(myDataFile);
+    }
 
     public WMGoLArray(final int rows, final int cols) {
         super(rows, cols, 0, 1);
@@ -10,13 +14,17 @@ public class WMGoLArray extends WMPingPongArray{
 
     public WMGoLArray(int numRows, int numCols, int numLiveColumns) {
         super(numRows, numCols, 0, 1);
-        super.swapLiveAndNext();
+
         addLiveCellsToNext(numLiveColumns);
+
         super.swapLiveAndNext();
         randomizeViaFisherYatesKnuth();
+
+        super.swapLiveAndNext();
     }
 
     private void addLiveCellsToNext(int numLiveCells) {
+        super.copyToNextArray();
 
         for (int index = 0; index < numLiveCells; index++) {
             int row = index / getNumRows();
@@ -26,20 +34,18 @@ public class WMGoLArray extends WMPingPongArray{
         } // for (int index = 0; index < numLiveCells; index++)
     } // private void addLiveCellsToNext(int numLiveCells)
 
-    public WMGoLArray(final String myDataFile) {
-        super(myDataFile);
-    }
-
     public void onTickUpdate() {
         int nearestNeighbour;
         copyToNextArray();
 
         for (int row = 0; row < getNumRows(); row++) {
+
             for (int col = 0; col < getNumCols(); col++) {
                 nearestNeighbour = getNNSum(row, col);
 
                 if (nearestNeighbour == 3) {
                     setAlive(row, col);
+
                 } else if (nearestNeighbour < 2 || nearestNeighbour > 3) {
                     setDead(row, col);
                 }

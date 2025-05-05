@@ -30,6 +30,8 @@ public class WMPingPongArray {
             } // for (int col = 0; col < numCols; col++)
 
         } // for (int row = 0; row < numRows; row++)
+
+        swapLiveAndNext();
     } // public WMPingPongArray(int numRows, int numCols, int randMin, int randMax)
 
     public WMPingPongArray(String dataFileName) {

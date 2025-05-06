@@ -4,6 +4,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
 import pkgWMUtils.WMGoLArray;
 import pkgWMUtils.WMWindowManager;
+import static pkgWMUtils.WMSPOT.*;
 
 import org.joml.Matrix4f;
 
@@ -20,7 +21,6 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 public class WMRenderer {
     private WMWindowManager myWM;
     private WMGeometryManager myGM;
-    private WMGoLArray myGoL;
     private int shader_program;
     private int NUM_COLS;
     private int NUM_ROWS;
@@ -34,7 +34,7 @@ public class WMRenderer {
     private int vpMatLocation;
     private int renderColorLocation;
 
-    public WMRenderer(WMWindowManager myWM, final int offset, final int padding, final int size, final int numRows, final int numCols, WMGoLArray myGOL) {
+    public WMRenderer(WMWindowManager myWM, final int offset, final int padding, final int size, final int numRows, final int numCols) {
         this.myWM = myWM;
         this.winWidthHeight = myWM.getWindowSize();
         this.myFloatBuffer = BufferUtils.createFloatBuffer(OGL_MATRIX_SIZE);
@@ -45,7 +45,6 @@ public class WMRenderer {
         this.NUM_COLS = numCols;
         this.PADDING = padding;
         this.SIZE = size;
-        this.myGoL = myGOL;
 
         myGM = new WMGeometryManager(NUM_ROWS, NUM_COLS, OFFSET, SIZE, PADDING, winWidthHeight);
     }
@@ -78,13 +77,11 @@ public class WMRenderer {
         vpMatLocation = glGetUniformLocation(shader_program, "viewProjMatrix");
     }
 
-    private void renderObjects() {
+    private void renderObjects(float[] vertices, int[] indices) {
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         int vbo = glGenBuffers();
         int ibo = glGenBuffers();
-        float[] vertices = myGM.generateTilesVertices(NUM_ROWS, NUM_COLS);
-        int[] indices = myGM.generateTileIndices(NUM_ROWS * NUM_COLS);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.
                 createFloatBuffer(vertices.length).
@@ -105,20 +102,34 @@ public class WMRenderer {
         myWM.swapBuffers();
     }
 
-    public void render() {
+    public void renderAllTiles() {
         glfwPollEvents();
         initOpenGL();
-        renderLoop();
-        myWM.destroyGlfwWindow();
-    }
 
-    public void renderLoop() {
+        float[] vertices = myGM.generateTilesVertices(NUM_ROWS, NUM_COLS);
+        int[] indices = myGM.generateTileIndices(NUM_ROWS * NUM_COLS);
+
         while (!myWM.isGlfwWindowClosed()) {
-            renderObjects();
+            renderObjects(vertices, indices);
         }
         /* Process window messages in the main thread */
         while (!myWM.isGlfwWindowClosed()) {
             glfwWaitEvents();
         }
+
+        myWM.destroyGlfwWindow();
+    }
+
+    public void renderGoLArray(final WMGoLArray goLArray) {
+        glfwPollEvents();
+        initOpenGL();
+
+        int liveCount = goLArray.liveCellCount();
+        float[] vertices = new float[liveCount * FPV * VPT];
+
+        myGM.generateTilesVertices(goLArray, vertices);
+        int[] indices = myGM.generateTileIndices(liveCount * EPT);
+
+        renderObjects(vertices, indices);
     }
 }

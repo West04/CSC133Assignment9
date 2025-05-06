@@ -13,7 +13,7 @@ public class WMGeometryManager {
     private final int PADDING;
     private final int VERTICES_LENGTH;
 
-    public WMGeometryManager(int maxRows, int maxCols, int offset, int size, int padding, int[] winWidthHeight) {
+    protected WMGeometryManager(int maxRows, int maxCols, int offset, int size, int padding, int[] winWidthHeight) {
         this.NUM_COLS = maxCols;
         this.NUM_ROWS = maxRows;
         this.OFFSET = offset;
@@ -25,7 +25,7 @@ public class WMGeometryManager {
         this.winWidthHeight = winWidthHeight;
     }
 
-    public int[] generateTileIndices(final int totalTiles) {
+    protected int[] generateTileIndices(final int totalTiles) {
         int total_elements = totalTiles * EPT;
         int[] indices = new int[total_elements];
         int cur_tile = 0;
@@ -42,7 +42,7 @@ public class WMGeometryManager {
         // return new int[]{0, 1, 2, 0, 2, 3};
     }
 
-    public float[] generateTilesVertices(final int rowTiles, final int columnTiles) {
+    protected float[] generateTilesVertices(final int rowTiles, final int columnTiles) {
         float[] vertices = new float[VPT * FPV * NUM_ROWS * NUM_COLS];
         float xmin = OFFSET;
         float ymin = winWidthHeight[1] - (SIZE + OFFSET);
@@ -63,16 +63,19 @@ public class WMGeometryManager {
         return vertices;
     }
 
-    public boolean fillArrayWithTileVertices(float[] vertices, int startIndex, float xmin, float ymin) {
+    protected boolean fillArrayWithTileVertices(float[] vertices, int startIndex, float xmin, float ymin) {
         if (startIndex < 0 || startIndex >= VERTICES_LENGTH) {
+            System.out.println("Problem startIndex: " + startIndex);
             return false;
         }
 
         if (xmin > winWidthHeight[0] || ymin > winWidthHeight[1]) {
+            System.out.println("Problem with xmin: " + xmin + ", ymin: " + ymin);
             return false;
         }
 
-        if (vertices == null || vertices.length != VERTICES_LENGTH) {
+        if (vertices == null) {
+            System.out.println("Problem with vertices, is it null");
             return false;
         }
 
@@ -88,46 +91,47 @@ public class WMGeometryManager {
         return true;
     }
 
-    public boolean generateTilesVertices(final WMGoLArray myGoL, float[] vertices) {
+    protected boolean generateTilesVertices(final WMGoLArray myGoL, final float[] vertices) {
         if (vertices == null) {
+            System.out.println("Vertices is null");
+            return false;
+        }
+        if (myGoL == null) {
+            System.out.println("MyGoL is null");
             return false;
         }
 
         int[][] array = myGoL.getArray();
-
         if (array == null) {
+            System.out.println("Array is null");
             return false;
         }
 
-        if (vertices.length != VERTICES_LENGTH || array.length != NUM_ROWS || array[0].length != NUM_COLS) {
-            return false;
-        }
-
-        int index = 0;
         int rows = myGoL.getNumRows();
         int cols = myGoL.getNumCols();
-        float xmin = OFFSET;
-        float ymin = winWidthHeight[1] - (SIZE + OFFSET);
+        int index = 0;
         float distanceBetween = SIZE + PADDING;
 
+        // Calculate base position
+        float xmin = OFFSET;
+        float ymin = winWidthHeight[1] - (SIZE + OFFSET);
+
         for (int row = 0; row < rows; row++) {
-
             for (int col = 0; col < cols; col++) {
-
                 if (array[row][col] == ALIVE) {
+                    float currentX = xmin + (col * distanceBetween);
+                    float currentY = ymin - (row * distanceBetween);
 
-                    if (!fillArrayWithTileVertices(
-                            vertices,
-                            index,
-                            xmin + (col * distanceBetween),
-                            ymin - (row * distanceBetween)
-                    )) {
+                    if (!fillArrayWithTileVertices(vertices, index, currentX, currentY)) {
+                        System.out.println("Failed to fill vertices for cell at [" + row + "," + col + "]");
                         return false;
                     }
+
                     index += VPT * FPV;
                 }
             }
         }
+
         return true;
     }
 }

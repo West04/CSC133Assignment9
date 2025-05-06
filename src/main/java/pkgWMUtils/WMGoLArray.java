@@ -21,17 +21,21 @@ public class WMGoLArray extends WMPingPongArray {
         randomizeViaFisherYatesKnuth();
 
         super.swapLiveAndNext();
-    }
+
+    } // public WMGoLArray(int numRows, int numCols, int numLiveColumns)
 
     private void addLiveCellsToNext(int numLiveCells) {
         super.copyToNextArray();
 
         for (int index = 0; index < numLiveCells; index++) {
+
             int row = index / getNumRows();
             int col = index % getNumCols();
 
             super.setCell(row, col, ALIVE);
+
         } // for (int index = 0; index < numLiveCells; index++)
+
     } // private void addLiveCellsToNext(int numLiveCells)
 
     public void onTickUpdate() {
@@ -49,9 +53,10 @@ public class WMGoLArray extends WMPingPongArray {
                 } else if (nearestNeighbour < 2 || nearestNeighbour > 3) {
                     setDead(row, col);
                 }
-            }
-        }
-    }
+
+            } // for (int col = 0; col < getNumCols(); col++)
+        } // for (int row = 0; row < getNumRows(); row++)
+    } // public void onTickUpdate()
 
     public int liveCellCount() {
         int count = 0;
@@ -69,15 +74,18 @@ public class WMGoLArray extends WMPingPongArray {
         } // for (int row = 0; row < getNumRows(); row++)
 
         return count;
-    }
+    } // public int liveCellCount()
 
     public void setCell(int row, int col, int newValue) {
+
         if (newValue == DEAD) {
             setDead(row, col);
+
         } else {
             setAlive(row, col);
         }
-    }
+
+    } // public void setCell(int row, int col, int newValue)
 
     public void setAlive(int row, int col) {
         super.setCell(row, col, ALIVE);
@@ -86,4 +94,5 @@ public class WMGoLArray extends WMPingPongArray {
     public void setDead(int row, int col) {
         super.setCell(row, col, DEAD);
     }
-}
+
+} // public class WMGoLArray extends WMPingPongArray

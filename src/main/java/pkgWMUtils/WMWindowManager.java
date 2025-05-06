@@ -10,6 +10,10 @@ import static org.lwjgl.opengl.GL11C.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class WMWindowManager {
+    private static WMWindowManager my_window;
+    private static long glfwWindow;
+    private static int win_height;
+    private static int win_width;
     private static final GLFWFramebufferSizeCallback resizeWindow =
             new GLFWFramebufferSizeCallback(){
                 @Override
@@ -17,10 +21,6 @@ public class WMWindowManager {
                     glViewport(0,0,width, height);
                 }
             };
-    private static WMWindowManager my_window;
-    private static long glfwWindow;
-    private static int win_height;
-    private static int win_width;
 
     private WMWindowManager() {
         initGlfwWindow();
@@ -42,11 +42,13 @@ public class WMWindowManager {
         if (my_window != null) {
             return my_window;
         }
+
         win_width = width;
         win_height = height;
 
         int defaultOrgX = 50;
         int defaultOrgY = 80;
+
         return init(width, height, defaultOrgX, defaultOrgY);
     } // public static WMWindowManager get(int width, int height)
 
@@ -59,6 +61,7 @@ public class WMWindowManager {
 
         int defaultOrgX = 50;
         int defaultOrgY = 80;
+
         return init(defaultWidth, defaultHeight, defaultOrgX, defaultOrgY);
     } //  public static WMWindowManager get()
 
@@ -66,6 +69,7 @@ public class WMWindowManager {
         win_width = width;
         win_height = height;
         my_window = new WMWindowManager();
+
         setWindowPosition(orgX, orgY);
 
         return my_window;
@@ -74,6 +78,7 @@ public class WMWindowManager {
     protected static void setWinWidth(int winWidth, int winHeight) {
         win_width = winWidth;
         win_height = winHeight;
+
         glfwSetWindowSize(glfwWindow, winWidth, winHeight);
     } // protected static void setWinWidth(int int)
 
@@ -93,8 +98,10 @@ public class WMWindowManager {
         glfwSetErrorCallback(errorCallback =
                 GLFWErrorCallback.createPrint(System.err));
 
-        if (!glfwInit())
+        if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
+        }
+
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -102,8 +109,9 @@ public class WMWindowManager {
 
         glfwWindow = glfwCreateWindow(win_width, win_height, "CSC 133", NULL, NULL);
 
-        if (glfwWindow == NULL)
+        if (glfwWindow == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
+        }
 
         glfwSetKeyCallback(glfwWindow, keyCallback = new GLFWKeyCallback() {
             @Override
@@ -138,12 +146,14 @@ public class WMWindowManager {
     } //  public int[] getWindowSize()
 
     public static void setWindowPosition(int orgX, int orgY) {
+
         if (glfwWindow > 0) {
             glfwSetWindowPos(glfwWindow, orgX, orgY);
         }  //  if (glfwWindow > 0)
+
     }  //  public void setWindowPosition(...)
 
     public static WMWindowManager get(int width, int height, int orgX, int orgY) {
         return (WMWindowManager) init(width, height, orgX, orgY);
     }  //  public WMWindowManager get(...)
-}
+} // public class WMWindowManager

@@ -21,9 +21,8 @@ public class WMGeometryManager {
         this.PADDING = padding;
         this.TOTAL = NUM_COLS * NUM_ROWS;
         this.VERTICES_LENGTH = TOTAL * VPT * FPV;
-
         this.winWidthHeight = winWidthHeight;
-    }
+    } // protected WMGeometryManager(int maxRows, int maxCols, int offset, int size, int padding, int[] winWidthHeight)
 
     protected int[] generateTileIndices(final int totalTiles) {
         int total_elements = totalTiles * EPT;
@@ -31,16 +30,18 @@ public class WMGeometryManager {
         int cur_tile = 0;
 
         for (int tile = 0; tile < totalTiles; tile++) {
+
             indices[cur_tile++] = tile * VPT;
             indices[cur_tile++] = tile * VPT + 1;
             indices[cur_tile++] = tile * VPT + 2;
             indices[cur_tile++] = tile * VPT;
             indices[cur_tile++] = tile * VPT + 2;
             indices[cur_tile++] = tile * VPT + 3;
-        }
+
+        } // for (int tile = 0; tile < totalTiles; tile++)
+
         return indices;
-        // return new int[]{0, 1, 2, 0, 2, 3};
-    }
+    } // protected int[] generateTileIndices(final int totalTiles)
 
     protected float[] generateTilesVertices(final int rowTiles, final int columnTiles) {
         float[] vertices = new float[VPT * FPV * NUM_ROWS * NUM_COLS];
@@ -49,19 +50,25 @@ public class WMGeometryManager {
         int index = 0;
 
         for (int row = 0; row < rowTiles; row++) {
+
             for (int col = 0; col < columnTiles; col++) {
+
                 if (!fillArrayWithTileVertices(vertices, index, xmin, ymin)) {
                     System.out.println("There is a problem!");
                 }
+
                 index += VPT * FPV;
                 xmin += SIZE + PADDING;
-            }
+
+            } // for (int col = 0; col < columnTiles; col++)
+
             xmin = OFFSET;
             ymin -= (SIZE + PADDING);
-        }
+
+        } //  for (int row = 0; row < rowTiles; row++)
 
         return vertices;
-    }
+    } // protected float[] generateTilesVertices(final int rowTiles, final int columnTiles)
 
     protected boolean fillArrayWithTileVertices(float[] vertices, int startIndex, float xmin, float ymin) {
         if (startIndex < 0 || startIndex >= VERTICES_LENGTH) {
@@ -89,7 +96,7 @@ public class WMGeometryManager {
         vertices[startIndex] = ymin + SIZE;
 
         return true;
-    }
+    } // protected boolean fillArrayWithTileVertices(float[] vertices, int startIndex, float xmin, float ymin)
 
     protected boolean generateTilesVertices(final WMGoLArray myGoL, final float[] vertices) {
         if (vertices == null) {
@@ -117,21 +124,27 @@ public class WMGeometryManager {
         float ymin = winWidthHeight[1] - (SIZE + OFFSET);
 
         for (int row = 0; row < rows; row++) {
+
             for (int col = 0; col < cols; col++) {
+
                 if (array[row][col] == ALIVE) {
+
                     float currentX = xmin + (col * distanceBetween);
                     float currentY = ymin - (row * distanceBetween);
 
                     if (!fillArrayWithTileVertices(vertices, index, currentX, currentY)) {
+
                         System.out.println("Failed to fill vertices for cell at [" + row + "," + col + "]");
                         return false;
-                    }
+
+                    } // if (!fillArrayWithTileVertices(vertices, index, currentX, currentY))
 
                     index += VPT * FPV;
-                }
-            }
-        }
+
+                } // if (array[row][col] == ALIVE)
+            } // for (int col = 0; col < cols; col++)
+        } // for (int row = 0; row < rows; row++)
 
         return true;
-    }
-}
+    } // protected boolean generateTilesVertices(final WMGoLArray myGoL, final float[] vertices)
+} // public class WMGeometryManager

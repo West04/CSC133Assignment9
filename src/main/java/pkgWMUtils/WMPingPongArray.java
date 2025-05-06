@@ -38,7 +38,7 @@ public class WMPingPongArray {
         int[][] readArray = readFile(dataFileName);
 
         if (readArray == null) {
-            System.out.println("File not read correct");
+            System.out.println("File was not read correct");
             System.exit(0);
         }
 
@@ -50,10 +50,14 @@ public class WMPingPongArray {
         this.nextArray = new int[numRows][numCols];
 
         for (int row = 0; row < numRows; row++) {
+
             for (int col = 0; col < numCols; col++) {
+
                 nextArray[row][col] = readArray[row][col];
-            }
-        }
+
+            } // for (int col = 0; col < numCols; col++)
+
+        } // for (int row = 0;// row < numRows; row++)
 
         swapLiveAndNext();
     } // public WMPingPongArray(String dataFileName)
@@ -71,21 +75,27 @@ public class WMPingPongArray {
     }
 
     public void printArray() {
+
         for (int row = 0; row < numRows; row++) {
             System.out.print(row + "  ");
 
             for (int col = 0; col < numCols; col++) {
+
                 System.out.print(liveArray[row][col] + " ");
+
             } // for (int col = 0; col < numCols; col++)
 
             System.out.println();
         } // for (int row = 0; row < numRows; row++)
+
     } // public void printArray
 
     public void swapLiveAndNext() {
+
         int[][] temp = liveArray;
         liveArray = nextArray;
         nextArray = temp;
+
     } // public void swapLiveAndNext
 
     public void randomizeViaFisherYatesKnuth() {
@@ -93,6 +103,7 @@ public class WMPingPongArray {
         int[][] tempArray = getArray();
 
         for (int index = 0; index < totalLength - 1; index++) {
+
             int randIndex = randInt.nextInt(index, totalLength); // Pick a random index >= index
 
             // Calculates initial row/col and random row/col
@@ -107,7 +118,9 @@ public class WMPingPongArray {
             tempArray[row2][col2] = temp;
 
         } // for (int index = 0; index < totalLength; index++)
+
         nextArray = tempArray;
+
     } // public void randomizeViaFisherYatesKnuth
 
 
@@ -116,10 +129,12 @@ public class WMPingPongArray {
 
         // Initialize Array to 0 to (totalLength - 1) in order
         for (int index = 0; index < totalLength; index++) {
+
             int row = index / numCols;
             int col = index % numCols;
 
             tempArray[row][col] = index;
+
         } // for (int index = 0; index < totalLength; index++)
 
         nextArray = tempArray; // Only can write to nextArray
@@ -178,10 +193,14 @@ public class WMPingPongArray {
         WMPingPongArray newBoard = new WMPingPongArray(array.length, array[0].length, defaultMin, defaultMax);
 
         for (int row = 0; row < array.length; row++) {
+
             for (int col = 0; col < array[row].length; col++) {
+
                 newBoard.setCell(row, col, array[row][col]);
-            }
-        }
+
+            } // for (int col = 0; col < array[row].length; col++)
+
+        } // for (int row = 0; row < array.length; row++)
 
         return newBoard;
 
@@ -204,9 +223,12 @@ public class WMPingPongArray {
             for (int i = 0; i < rows; i++) {
 
                 for (int j = 0; j < cols; j++) {
+
                     array[i][j] = defaultValue;
-                }
-            }
+
+                } // for (int j = 0; j < cols; j++)
+
+            } // for (int i = 0; i < rows; i++)
 
             int row = -1;
 
@@ -226,17 +248,21 @@ public class WMPingPongArray {
 
                 row++;
                 lineReader.close();
+
             } // while (scanner.hasNextLine() && row < rows)
 
             scanner.close();
 
             return array;
+
         } // try
+
         catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         return null;
-    }
+    } // protected static int[][] readFile(String dataFileName)
 
     public int[][] getArray() {
         int[][] cloneArray = new int[numRows][numCols];
@@ -244,11 +270,14 @@ public class WMPingPongArray {
         for (int row = 0; row < numRows; row++) {
 
             for (int col = 0; col < numCols; col++) {
-                cloneArray[row][col] = liveArray[row][col];
-            }
 
+                cloneArray[row][col] = liveArray[row][col];
+
+            } // for (int col = 0; col < numCols; col++)
         } // for (int row = 0; row < numRows; row++)
+
         return cloneArray;
+
     } // public int[][] getArray()
 
     public void copyToNextArray() {
@@ -315,4 +344,5 @@ public class WMPingPongArray {
 
         } // for (int row = 0; row < numRows; row++)
     } // public void updateToNearestNNSum()
-}
+
+} // public class WMPingPongArray

@@ -40,14 +40,18 @@ public class Driver {
             myGoL = new WMGoLArray(rows, cols, numOfLiveCells);
         }
 
-        final int winWidth = (size + padding) * cols + 2 * offset;
-        final int winHeight = (size + padding) * rows + 2 * offset;
+        // Calculate Window Size
+        final int offsetMultiplier = 2;
+        final int winWidth = (size + padding) * cols + offsetMultiplier * offset;
+        final int winHeight = (size + padding) * rows + offsetMultiplier * offset;
 
+        // Init WindowManager and Renderer
         final WMWindowManager myWM = WMWindowManager.get(winWidth, winHeight, winOrgX, winOrgY);
         final WMRenderer myRenderer = new WMRenderer(myWM, offset, padding, size, rows, cols);
 
         myWM.updateContextToThis();
 
+        // Main logic loop (executable GoLArray Update then renders)
         while (!myWM.isGlfwWindowClosed()) {
 
             myRenderer.renderGoLArray(myGoL);

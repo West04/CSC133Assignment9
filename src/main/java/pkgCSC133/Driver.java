@@ -5,44 +5,87 @@ import pkgWMUtils.WMGoLArray;
 import pkgWMUtils.WMWindowManager;
 
 import static java.lang.Thread.sleep;
+import static org.lwjgl.glfw.GLFW.glfwWaitEvents;
 
 public class Driver {
+    private static final int sleepTime = 300;
+
     public static void main(String[] args) {
-        final int numRows = 6, numCols = 6, polyLength = 10, polyOffset = 5, polyPadding = 5;
-        final int winWidth = (polyLength + polyPadding) * numCols + 2 * polyOffset;
-        final int winHeight = (polyLength + polyPadding) * numRows + 2 * polyOffset;
+        //randomRun();
+
+        fileRun(args);
+    }
+
+    public static void fileRun(String[] args) {
+        final WMGoLArray myGoL = new WMGoLArray(args[0]);
+        final int rows = myGoL.getNumRows(), cols = myGoL.getNumCols();
+        final int offset = 10, padding = 5, size = 50;
+
+        final int winWidth = (size + padding) * cols + 2 * offset;
+        final int winHeight = (size + padding) * rows + 2 * offset;
+
         final int winOrgX = 50, winOrgY = 80;
+
+
         final WMWindowManager myWM = WMWindowManager.get(winWidth, winHeight, winOrgX, winOrgY);
 
-        final WMGoLArray myGoL = new WMGoLArray(args[0]);
-        myGoL.printArray();
-
-        final WMRenderer myRenderer = new WMRenderer(myWM, polyOffset, polyPadding, polyLength, numRows, numCols, myGoL);
+        final WMRenderer myRenderer = new WMRenderer(myWM, offset, padding, size, rows, cols);
 
         myWM.updateContextToThis();
 
-        myRenderer.render();
-
         while (!myWM.isGlfwWindowClosed()) {
+            myRenderer.renderGoLArray(myGoL);
             myGoL.onTickUpdate();
+            myGoL.swapLiveAndNext();
 
-            myRenderer.render();
             try {
-                sleep(1000);
+                sleep(sleepTime);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
+
+        while (!myWM.isGlfwWindowClosed()) {
+            glfwWaitEvents();
+        }
+
+        myWM.destroyGlfwWindow();
     }
 
-    public static void proj6(WMGoLArray myGoL) {
-        final int numRows = 6, numCols = 7, polyLength = 50, polyOffset = 10, polyPadding = 20;
-        final int winWidth = (polyLength + polyPadding) * numCols + 2 * polyOffset;
-        final int winHeight = (polyLength + polyPadding) * numRows + 2 * polyOffset;
+    public static void randomRun() {
+        final WMGoLArray myGoL = new WMGoLArray(100, 100, 5000);
+        final int rows = myGoL.getNumRows(), cols = myGoL.getNumCols();
+        final int offset = 2, padding = 2, size = 7;
+
+        final int winWidth = (size + padding) * cols + 2 * offset;
+        final int winHeight = (size + padding) * rows + 2 * offset;
+
         final int winOrgX = 50, winOrgY = 80;
-        final WMWindowManager myWM = WMWindowManager.get(winWidth, winHeight, winOrgX, winOrgY);
-        final WMRenderer myRenderer = new WMRenderer(myWM, polyOffset, polyPadding, polyLength, numRows, numCols, myGoL);
-        myRenderer.render();
 
+
+        final WMWindowManager myWM = WMWindowManager.get(winWidth, winHeight, winOrgX, winOrgY);
+
+        final WMRenderer myRenderer = new WMRenderer(myWM, offset, padding, size, rows, cols);
+
+        myWM.updateContextToThis();
+
+        while (!myWM.isGlfwWindowClosed()) {
+            myRenderer.renderGoLArray(myGoL);
+            myGoL.onTickUpdate();
+            myGoL.swapLiveAndNext();
+
+            try {
+                sleep(sleepTime);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        while (!myWM.isGlfwWindowClosed()) {
+            glfwWaitEvents();
+        }
+
+        myWM.destroyGlfwWindow();
     }
+
 }

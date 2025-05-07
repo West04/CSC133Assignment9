@@ -8,7 +8,8 @@ import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.GLFW.glfwWaitEvents;
 
 public class Driver {
-    private static final int sleepTime = 300;
+    private static final int SLEEP_TIME = 300;
+    private static final int MAX_ITERATIONS = 100;
 
     public static void main(String[] args) {
         int rows, cols;
@@ -51,18 +52,22 @@ public class Driver {
 
         myWM.updateContextToThis();
 
+        int iterations = 0;
+
         // Main logic loop (executable GoLArray Update then renders)
-        while (!myWM.isGlfwWindowClosed()) {
+        while (!myWM.isGlfwWindowClosed() && iterations < MAX_ITERATIONS) {
 
             myRenderer.renderGoLArray(myGoL);
             myGoL.onTickUpdate();
             myGoL.swapLiveAndNext();
 
             try {
-                sleep(sleepTime);
+                sleep(SLEEP_TIME);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+
+            iterations++;
         } // while (!myWM.isGlfwWindowClosed())
 
         while (!myWM.isGlfwWindowClosed()) {

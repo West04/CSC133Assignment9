@@ -68,7 +68,7 @@ public class Driver {
             }
 
             iterations++;
-        } // while (!myWM.isGlfwWindowClosed())
+        } //while (!myWM.isGlfwWindowClosed() && iterations < MAX_ITERATIONS)
 
         while (!myWM.isGlfwWindowClosed()) {
             glfwWaitEvents();
